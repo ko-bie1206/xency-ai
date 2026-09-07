@@ -1,0 +1,85 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Client {
+  id          String   @id @default(cuid())
+  name        String
+  createdAt   DateTime @default(now())
+  reviewToken String   @unique @default(cuid())
+  xHandle     String?
+  avatarPath  String?
+
+  posts          Post[]
+  context        ContextSummary?
+  hearing        HearingSession?
+  scheduledPosts ScheduledPost[]
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  reference String
+  theme     String
+  notes     String?
+  output    String
+  createdAt DateTime @default(now())
+
+  @@index([clientId])
+}
+
+model ContextSummary {
+  id        String   @id @default(cuid())
+  clientId  String   @unique
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  youtube   String?
+  sns       String?
+  other     String?
+  summary   String?
+  updatedAt DateTime @updatedAt
+}
+
+model HearingSession {
+  id              String   @id @default(cuid())
+  clientId        String   @unique
+  client          Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  pendingQuestion String?
+  finished        Boolean  @default(false)
+  summary         String?
+  updatedAt       DateTime @updatedAt
+
+  qas HearingQA[]
+}
+
+model HearingQA {
+  id        String         @id @default(cuid())
+  sessionId String
+  session   HearingSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  question  String
+  answer    String
+  order     Int
+  createdAt DateTime       @default(now())
+
+  @@index([sessionId])
+}
+
+model ScheduledPost {
+  id            String    @id @default(cuid())
+  clientId      String
+  client        Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  scheduledDate DateTime
+  content       String
+  imagePath     String?
+  status        String    @default("pending") // pending | approved | rejected
+  reviewNote    String?
+  reviewedAt    DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([clientId, scheduledDate])
+}
