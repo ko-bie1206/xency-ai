@@ -69,6 +69,12 @@ model HearingQA {
   @@index([sessionId])
 }
 
+model AllowedEmail {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
 model ScheduledPost {
   id            String    @id @default(cuid())
   clientId      String

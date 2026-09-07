@@ -30,5 +30,6 @@ export const config = {
     "/api/context/:path*",
     "/api/hearing/:path*",
     "/api/schedule/:path*",
+    "/api/allowed-emails/:path*",
   ],
 };

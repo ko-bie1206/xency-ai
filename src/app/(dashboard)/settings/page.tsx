@@ -5,6 +5,8 @@ import { useTheme } from "@/lib/ThemeContext";
 import { useClients } from "@/lib/ClientsContext";
 import { ClientAvatar } from "@/components/ClientAvatar";
 
+type AllowedEmail = { id: string; email: string; createdAt: string };
+
 export default function SettingsPage() {
   const { theme, toggleTheme } = useTheme();
   const { currentClient, currentClientId, updateXHandle, uploadAvatar, removeAvatar } = useClients();
@@ -15,10 +17,48 @@ export default function SettingsPage() {
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [avatarError, setAvatarError] = useState("");
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const [allowedEmails, setAllowedEmails] = useState<AllowedEmail[]>([]);
+  const [newEmail, setNewEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [addingEmail, setAddingEmail] = useState(false);
 
   useEffect(() => {
     setXHandle(currentClient?.xHandle ?? "");
   }, [currentClient]);
+
+  useEffect(() => {
+    fetch("/api/allowed-emails")
+      .then((r) => r.json())
+      .then(setAllowedEmails);
+  }, []);
+
+  const addAllowedEmail = async () => {
+    const email = newEmail.trim();
+    if (!email) return;
+    setEmailError("");
+    setAddingEmail(true);
+    try {
+      const res = await fetch("/api/allowed-emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body?.error || "追加に失敗しました");
+      setAllowedEmails((prev) => [...prev, body]);
+      setNewEmail("");
+    } catch (err) {
+      setEmailError(err instanceof Error ? err.message : "追加に失敗しました");
+    } finally {
+      setAddingEmail(false);
+    }
+  };
+
+  const removeAllowedEmail = async (id: string) => {
+    if (!confirm("このアカウントのログイン許可を削除しますか？")) return;
+    await fetch(`/api/allowed-emails/${id}`, { method: "DELETE" });
+    setAllowedEmails((prev) => prev.filter((e) => e.id !== id));
+  };
 
   const saveXHandle = async () => {
     if (!currentClientId) return;
@@ -104,6 +144,52 @@ export default function SettingsPage() {
             Xアカウント連携（自動投稿・数値取得）
             <span className="status-tag pending">未実装</span>
           </div>
+        </div>
+        <div className="settings-block">
+          <div className="settings-row-title">ログインを許可するGoogleアカウント</div>
+          <div className="settings-row-desc">
+            ここに追加したメールアドレスのGoogleアカウントだけが、スタッフダッシュボードにログインできます。
+          </div>
+          <div className="history-list" style={{ marginTop: ".6rem" }}>
+            {allowedEmails.length === 0 && (
+              <div className="dropdown-empty" style={{ padding: ".4rem 0" }}>
+                まだ追加されていません
+              </div>
+            )}
+            {allowedEmails.map((e) => (
+              <div
+                key={e.id}
+                className="status-row"
+                style={{ borderTop: "1px solid var(--border)", padding: ".5rem 0" }}
+              >
+                {e.email}
+                <button
+                  className="row-remove"
+                  style={{ visibility: "visible", marginLeft: "auto" }}
+                  title="削除"
+                  onClick={() => removeAllowedEmail(e.id)}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", gap: ".5rem", marginTop: ".8rem", alignItems: "center" }}>
+            <input
+              type="text"
+              placeholder="example@gmail.com"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.nativeEvent.isComposing) addAllowedEmail();
+              }}
+              style={{ maxWidth: 280 }}
+            />
+            <button className="btn-ghost small" disabled={addingEmail} onClick={addAllowedEmail}>
+              {addingEmail ? "追加中…" : "追加"}
+            </button>
+          </div>
+          {emailError && <div className="error-text">{emailError}</div>}
         </div>
         {currentClient && (
           <div className="settings-block">
