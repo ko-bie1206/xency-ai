@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "@/lib/ThemeContext";
 import { ClientSwitcher } from "@/components/ClientSwitcher";
 import { BrandLogo } from "@/components/BrandLogo";
+import { signOutAction } from "@/lib/authActions";
 import {
   PencilIcon,
   CalendarIcon,
@@ -22,7 +23,7 @@ const NAV_ITEMS = [
   { path: "/context", label: "コンテキストまとめ", icon: ChartIcon },
 ] as const;
 
-export function Sidebar() {
+export function Sidebar({ userEmail }: { userEmail: string | null }) {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
 
@@ -71,6 +72,14 @@ export function Sidebar() {
           <span>{theme === "light" ? "ダークモード" : "ライトモード"}</span>
         </button>
         <ClientSwitcher panelPosition="up" />
+        {userEmail && (
+          <form action={signOutAction}>
+            <div className="sidebar-user-email">{userEmail}</div>
+            <button className="sidebar-nav-item" type="submit">
+              ログアウト
+            </button>
+          </form>
+        )}
       </div>
     </aside>
   );

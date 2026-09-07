@@ -130,6 +130,14 @@ textarea {
   width: 100%;
   justify-content: flex-start;
 }
+.sidebar-user-email {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  padding: 0.7rem 0.65rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .dropdown-panel.dropdown-panel-up {
   top: auto;
   bottom: calc(100% + 8px);
@@ -1031,4 +1039,13 @@ html[data-theme="dark"] .theme-toggle .toggle-knob {
   color: var(--text-dim);
   font-size: 0.78rem;
   margin-top: 0.8rem;
+}
+
+.login-card {
+  max-width: 360px;
+  margin: 4rem auto 0;
+  padding: 2.2rem 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
