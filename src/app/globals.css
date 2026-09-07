@@ -1049,3 +1049,23 @@ html[data-theme="dark"] .theme-toggle .toggle-knob {
   border: 1px solid var(--border);
   border-radius: 14px;
 }
+
+.thread-slot {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.4rem 1.6rem 1.6rem;
+  margin-bottom: 1.4rem;
+}
+.thread-slot-header {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.image-drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}

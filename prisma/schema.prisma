@@ -19,6 +19,7 @@ model Client {
   context        ContextSummary?
   hearing        HearingSession?
   scheduledPosts ScheduledPost[]
+  thread         Thread?
 }
 
 model Post {
@@ -73,6 +74,29 @@ model AllowedEmail {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model Thread {
+  id        String   @id @default(cuid())
+  clientId  String   @unique
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  updatedAt DateTime @updatedAt
+
+  items ThreadItem[]
+}
+
+model ThreadItem {
+  id                 String   @id @default(cuid())
+  threadId           String
+  thread             Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  order              Int
+  referenceText      String?
+  referenceImagePath String?
+  instruction        String?
+  output             String?
+  updatedAt          DateTime @updatedAt
+
+  @@index([threadId])
 }
 
 model ScheduledPost {

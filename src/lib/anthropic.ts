@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import type { LLMImage } from "@/lib/llm";
 
 let client: Anthropic | null = null;
 
@@ -14,12 +15,22 @@ function getClient(): Anthropic {
 
 const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5";
 
-export async function callClaude(system: string, userText: string): Promise<string> {
+export async function callClaude(system: string, userText: string, image?: LLMImage): Promise<string> {
+  const content: Anthropic.MessageParam["content"] = image
+    ? [
+        {
+          type: "image",
+          source: { type: "base64", media_type: image.mimeType as "image/jpeg", data: image.base64 },
+        },
+        { type: "text", text: userText },
+      ]
+    : userText;
+
   const resp = await getClient().messages.create({
     model: MODEL,
     max_tokens: 1200,
     system,
-    messages: [{ role: "user", content: userText }],
+    messages: [{ role: "user", content }],
   });
 
   return resp.content

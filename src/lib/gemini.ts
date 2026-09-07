@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import type { LLMImage } from "@/lib/llm";
 
 let client: GoogleGenAI | null = null;
 
@@ -30,10 +31,14 @@ function extractText(resp: any): string {
   return "";
 }
 
-export async function callGemini(system: string, userText: string): Promise<string> {
+export async function callGemini(system: string, userText: string, image?: LLMImage): Promise<string> {
+  const parts = image
+    ? [{ text: userText }, { inlineData: { mimeType: image.mimeType, data: image.base64 } }]
+    : [{ text: userText }];
+
   const resp = await getClient().models.generateContent({
     model: MODEL,
-    contents: userText,
+    contents: [{ role: "user", parts }],
     config: { systemInstruction: system },
   });
   return extractText(resp).trim();

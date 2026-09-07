@@ -8,6 +8,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { signOutAction } from "@/lib/authActions";
 import {
   PencilIcon,
+  ThreadIcon,
   CalendarIcon,
   ChartIcon,
   GearIcon,
@@ -19,6 +20,7 @@ import {
 
 const NAV_ITEMS = [
   { path: "/post", label: "投稿作成", icon: PencilIcon },
+  { path: "/thread", label: "スレッド作成", icon: ThreadIcon },
   { path: "/schedule", label: "投稿予定", icon: CalendarIcon },
   { path: "/context", label: "コンテキストまとめ", icon: ChartIcon },
 ] as const;

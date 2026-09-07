@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
-const PROTECTED_PREFIXES = ["/post", "/schedule", "/context", "/hearing", "/settings"];
+const PROTECTED_PREFIXES = ["/post", "/thread", "/schedule", "/context", "/hearing", "/settings"];
 
 function needsAuth(pathname: string): boolean {
   if (pathname === "/") return true;
@@ -21,12 +21,14 @@ export const config = {
   matcher: [
     "/",
     "/post/:path*",
+    "/thread/:path*",
     "/schedule/:path*",
     "/context/:path*",
     "/hearing/:path*",
     "/settings/:path*",
     "/api/clients/:path*",
     "/api/posts/:path*",
+    "/api/thread/:path*",
     "/api/context/:path*",
     "/api/hearing/:path*",
     "/api/schedule/:path*",

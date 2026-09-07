@@ -103,6 +103,28 @@ export function MoonIcon({ size = 16 }: IconProps) {
   );
 }
 
+export function ThreadIcon({ size = 16 }: IconProps) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <circle cx="6" cy="6" r="2.2" />
+      <circle cx="6" cy="18" r="2.2" />
+      <path d="M6 8.2V15.8" />
+      <path d="M8.5 6H15a3 3 0 0 1 3 3v0" />
+      <path d="M8.5 18H15a3 3 0 0 0 3-3v0" />
+    </svg>
+  );
+}
+
+export function ImageIcon({ size = 16 }: IconProps) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <rect x="3" y="3" width="18" height="18" rx="2" />
+      <circle cx="9" cy="9" r="2" />
+      <path d="m21 15-5-5L5 21" />
+    </svg>
+  );
+}
+
 export function CalendarIcon({ size = 16 }: IconProps) {
   return (
     <svg {...base} width={size} height={size}>
