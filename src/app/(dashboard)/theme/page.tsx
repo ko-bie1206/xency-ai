@@ -48,6 +48,7 @@ export default function ThemePage() {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [materialsOpen, setMaterialsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [materialError, setMaterialError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -99,14 +100,20 @@ export default function ThemePage() {
 
   const uploadMaterial = async (file: File | null) => {
     if (!file) return;
+    setMaterialError("");
     setUploading(true);
     try {
       const form = new FormData();
       form.append("image", file);
       const res = await fetch("/api/reference-materials", { method: "POST", body: form });
-      if (!res.ok) throw new Error("failed");
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `アップロードに失敗しました (${res.status})`);
+      }
       const material: ReferenceMaterial = await res.json();
       setMaterials((prev) => [...prev, material]);
+    } catch (err) {
+      setMaterialError(err instanceof Error ? err.message : "アップロードに失敗しました。");
     } finally {
       setUploading(false);
     }
@@ -181,6 +188,7 @@ export default function ThemePage() {
           >
             {uploading ? "アップロード中…" : "+ 画像を追加"}
           </button>
+          {materialError && <div className="error-text">{materialError}</div>}
           <input
             ref={fileInputRef}
             type="file"

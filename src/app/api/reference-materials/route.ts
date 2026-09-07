@@ -23,6 +23,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 
-  const material = await prisma.referenceMaterial.create({ data: { imagePath } });
-  return NextResponse.json(material);
+  try {
+    const material = await prisma.referenceMaterial.create({ data: { imagePath } });
+    return NextResponse.json(material);
+  } catch (err) {
+    console.error("failed to save reference material", err);
+    return NextResponse.json({ error: "failed to save reference material" }, { status: 500 });
+  }
 }
