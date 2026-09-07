@@ -1,7 +1,16 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
-const PROTECTED_PREFIXES = ["/post", "/thread", "/schedule", "/context", "/hearing", "/settings"];
+const PROTECTED_PREFIXES = [
+  "/post",
+  "/thread",
+  "/hook",
+  "/theme",
+  "/schedule",
+  "/context",
+  "/hearing",
+  "/settings",
+];
 
 function needsAuth(pathname: string): boolean {
   if (pathname === "/") return true;
@@ -22,6 +31,8 @@ export const config = {
     "/",
     "/post/:path*",
     "/thread/:path*",
+    "/hook/:path*",
+    "/theme/:path*",
     "/schedule/:path*",
     "/context/:path*",
     "/hearing/:path*",
@@ -29,6 +40,9 @@ export const config = {
     "/api/clients/:path*",
     "/api/posts/:path*",
     "/api/thread/:path*",
+    "/api/hooks/:path*",
+    "/api/themes/:path*",
+    "/api/reference-materials/:path*",
     "/api/context/:path*",
     "/api/hearing/:path*",
     "/api/schedule/:path*",

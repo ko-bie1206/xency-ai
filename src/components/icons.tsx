@@ -103,6 +103,25 @@ export function MoonIcon({ size = 16 }: IconProps) {
   );
 }
 
+export function HookIcon({ size = 16 }: IconProps) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <path d="M8 2v13a4 4 0 0 0 8 0v-3a3 3 0 0 0-6 0" />
+      <circle cx="8" cy="2.6" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function LightbulbIcon({ size = 16 }: IconProps) {
+  return (
+    <svg {...base} width={size} height={size}>
+      <path d="M9 18h6" />
+      <path d="M10 22h4" />
+      <path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2Z" />
+    </svg>
+  );
+}
+
 export function ThreadIcon({ size = 16 }: IconProps) {
   return (
     <svg {...base} width={size} height={size}>

@@ -9,6 +9,8 @@ import { signOutAction } from "@/lib/authActions";
 import {
   PencilIcon,
   ThreadIcon,
+  HookIcon,
+  LightbulbIcon,
   CalendarIcon,
   ChartIcon,
   GearIcon,
@@ -21,6 +23,8 @@ import {
 const NAV_ITEMS = [
   { path: "/post", label: "投稿作成", icon: PencilIcon },
   { path: "/thread", label: "スレッド作成", icon: ThreadIcon },
+  { path: "/hook", label: "フック作成", icon: HookIcon },
+  { path: "/theme", label: "テーマ作成", icon: LightbulbIcon },
   { path: "/schedule", label: "投稿予定", icon: CalendarIcon },
   { path: "/context", label: "コンテキストまとめ", icon: ChartIcon },
 ] as const;

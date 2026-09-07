@@ -20,6 +20,8 @@ model Client {
   hearing        HearingSession?
   scheduledPosts ScheduledPost[]
   thread         Thread?
+  hooks          Hook[]
+  themes         Theme[]
 }
 
 model Post {
@@ -97,6 +99,36 @@ model ThreadItem {
   updatedAt          DateTime @updatedAt
 
   @@index([threadId])
+}
+
+model Hook {
+  id         String   @id @default(cuid())
+  clientId   String
+  client     Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  references String
+  elements   String
+  output     String
+  createdAt  DateTime @default(now())
+
+  @@index([clientId])
+}
+
+model Theme {
+  id        String   @id @default(cuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  context   String
+  elements  String
+  output    String
+  createdAt DateTime @default(now())
+
+  @@index([clientId])
+}
+
+model ReferenceMaterial {
+  id        String   @id @default(cuid())
+  imagePath String
+  createdAt DateTime @default(now())
 }
 
 model ScheduledPost {
