@@ -12,6 +12,11 @@ export async function POST(req: Request) {
   if (!name) {
     return NextResponse.json({ error: "name is required" }, { status: 400 });
   }
-  const client = await prisma.client.create({ data: { name } });
-  return NextResponse.json(client);
+  try {
+    const client = await prisma.client.create({ data: { name } });
+    return NextResponse.json(client);
+  } catch (err) {
+    console.error("failed to create client", err);
+    return NextResponse.json({ error: "failed to create client" }, { status: 500 });
+  }
 }

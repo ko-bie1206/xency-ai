@@ -60,7 +60,10 @@ export function ClientsProvider({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name }),
       });
-      if (!res.ok) throw new Error("failed to create client");
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || `failed to create client (${res.status})`);
+      }
       const client: ClientRecord = await res.json();
       setClients((prev) => [...prev, client]);
       selectClient(client.id);

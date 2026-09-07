@@ -10,6 +10,8 @@ export function ClientSwitcher({ panelPosition = "down" }: { panelPosition?: "do
   const { clients, currentClient, currentClientId, selectClient, addClient, removeClient } = useClients();
   const [open, setOpen] = useState(false);
   const [newName, setNewName] = useState("");
+  const [addError, setAddError] = useState("");
+  const [adding, setAdding] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useClickOutside(wrapRef, () => setOpen(false), open);
@@ -17,9 +19,17 @@ export function ClientSwitcher({ panelPosition = "down" }: { panelPosition?: "do
   const handleAdd = async () => {
     const name = newName.trim();
     if (!name) return;
-    await addClient(name);
-    setNewName("");
-    setOpen(false);
+    setAddError("");
+    setAdding(true);
+    try {
+      await addClient(name);
+      setNewName("");
+      setOpen(false);
+    } catch (err) {
+      setAddError(err instanceof Error ? err.message : "追加に失敗しました。");
+    } finally {
+      setAdding(false);
+    }
   };
 
   return (
@@ -79,10 +89,20 @@ export function ClientSwitcher({ panelPosition = "down" }: { panelPosition?: "do
                 if (e.key === "Enter" && !e.nativeEvent.isComposing) handleAdd();
               }}
             />
-            <button className="icon-btn" style={{ width: 30, height: 30 }} onClick={handleAdd}>
+            <button
+              className="icon-btn"
+              style={{ width: 30, height: 30 }}
+              disabled={adding}
+              onClick={handleAdd}
+            >
               <PlusIcon />
             </button>
           </div>
+          {addError && (
+            <div className="error-text" style={{ padding: "0 0.2rem" }}>
+              {addError}
+            </div>
+          )}
         </div>
       )}
     </div>
